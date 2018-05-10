@@ -1,2 +1,10 @@
 /cache/
 /config/development/
+*.code-workspace
+vendor/
+*phpinfo*
+/build/
+.env
+error.log
+*.min.css
+*.min.js
