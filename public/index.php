@@ -3,8 +3,7 @@ use Phalcon\Di\FactoryDefault;
 
 error_reporting(E_ALL);
 
-define('BASE_PATH', dirname(__DIR__));
-define('APP_PATH', BASE_PATH . '/app');
+require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
 
@@ -13,16 +12,16 @@ try {
      * the services that provide a full stack framework.
      */
     $di = new FactoryDefault();
-
+    $configPath = app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
     /**
      * Handle routes
      */
-    include APP_PATH . '/config/router.php';
+    include  $configPath . 'router.php';
 
     /**
      * Read services
      */
-    include APP_PATH . '/config/services.php';
+    include $configPath . 'services.php';
 
     /**
      * Get config service for use in inline setup below
@@ -32,16 +31,20 @@ try {
     /**
      * Include Autoloader
      */
-    include APP_PATH . '/config/loader.php';
+    include $configPath . 'loader.php';
 
     /**
      * Handle the request
      */
     $application = new \Phalcon\Mvc\Application($di);
-
-    echo str_replace(["\n","\r","\t"], '', $application->handle()->getContent());
-
+    echo $application->handle()->getContent();
 } catch (\Exception $e) {
-    echo $e->getMessage() . '<br>';
-    echo '<pre>' . $e->getTraceAsString() . '</pre>';
+    $exceptionRef = time();
+    $di['logger']->error($exceptionRef . ' ' . $e->getMessage());
+    $di['logger']->error($exceptionRef . ' ' . $e->getTraceAsString());
+
+    $di['response']->setStatusCode(INTERNAL_SERVER_ERROR);
+    $di['response']->setContentType('application/json', 'UTF-8');
+    $di['response']->setContent(json_encode(['message' => 'Internal server error with reference ' . $exceptionRef]));
+    $di['response']->send();
 }
