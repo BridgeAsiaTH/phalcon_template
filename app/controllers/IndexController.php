@@ -44,5 +44,8 @@ class IndexController extends BaseController
         $this->view->setVars([
             'cache_key' => $cacheKey,
         ]);
+
+        // Use logger to investigate an issue.
+        // $this->di->get('logger')->debug(print_r($variable, true));
     }
 }
