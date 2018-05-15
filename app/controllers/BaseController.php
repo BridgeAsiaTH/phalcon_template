@@ -9,6 +9,7 @@ class BaseController extends Controller
     {
         $this->tag->setTitle('THIS IS HOME.');
     }
+
     public function hasErrors($result) : bool
     {
         if (!isset($result['messages'])) {
@@ -16,6 +17,7 @@ class BaseController extends Controller
         }
         return !empty($result['messages']);
     }
+
     public function existsById(string $modelName, $id, $keyName = 'id')
     {
         $result = false;
@@ -29,6 +31,7 @@ class BaseController extends Controller
         }
         return $result;
     }
+
     public function modelUpdate($model, array $extra = [])
     {
         $messages = [];
@@ -44,6 +47,7 @@ class BaseController extends Controller
         }
         return [ 'messages' => $this->extractValidationErrorMessage($messages), 'model' => $model];
     }
+
     public function modelCreate(string $modelName, array $extra = [])
     {
         $messages = [];
@@ -60,35 +64,7 @@ class BaseController extends Controller
         }
         return [ 'messages' => $this->extractValidationErrorMessage($messages), 'model' => $model];
     }
-    public function getRoleByName($roleName)
-    {
-        return $this->di['Role']::findFirst([
-            'name = :name:',
-            'bind' => [
-                'name' => $roleName
-            ],
-            'cache' => [
-                'key' => 'role_' . $roleName,
-                'lifetime' => ONE_DAY_IN_SECOND,
-            ]
-        ]);
-    }
-    public function isRoleValid($roleToCheck)
-    {
-        $roles = $this->di['Role']::find([
-            '',
-            'cache' => [
-                'key' => 'role_table',
-                'lifetime' => ONE_DAY_IN_SECOND,
-            ]
-        ]);
-        foreach ($roles as $role) {
-            if ($role->name == $roleToCheck) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     public function extractHeader($key)
     {
         $headers = $this->request->getHeaders();
@@ -97,6 +73,7 @@ class BaseController extends Controller
         }
         return null;
     }
+
     public function extractJsonBody($key, $default = null)
     {
         $output = $default;
@@ -105,14 +82,17 @@ class BaseController extends Controller
         }
         return $output;
     }
+
     public function getClientIPAddress()
     {
         return $this->request->getServer('HTTP_X_FORWARDED_FOR') ?? $this->request->getServer('REMOTE_ADDR');
     }
+
     public function getWebUrl()
     {
         return ($this->request->getServer('HTTP_X_FORWARDED_PROTO') ?? $this->request->getServer('REQUEST_SCHEME') ?? 'http') . '://' . $this->request->getServer('HTTP_HOST');
     }
+
     public function extractValidationErrorMessage($messages) : array
     {
         $output = [];
@@ -121,10 +101,12 @@ class BaseController extends Controller
         }
         return $output;
     }
+
     public function responseMessage(array $messages, $status = OK)
     {
         return $this->sendJson(['messages' => $messages], $status);
     }
+
     public function sendJson($data, $status = OK)
     {
         if ($this->request->isPost() == true && $this->request->isAjax()) {
@@ -138,5 +120,28 @@ class BaseController extends Controller
         $this->response->setContentType('application/json', 'UTF-8');
         $this->response->setContent(json_encode($data));
         return $this->response;
+    }
+
+    public function loadResource($collection, array $resourcesList = [], string $action = 'addCss')
+    {
+        foreach ($resourcesList as $item) {
+            if (!is_array($item)) {
+                $collection->{$action}(getResourceFilename($item));
+            } else {
+                $file = $item[FILE_KEY];
+                $cacheBuster = $item[CACHE_BUSTER_KEY];
+                $collection->{$action}(getResourceFilename($file, $cacheBuster));
+            }
+        }
+    }
+
+    public function loadCssResources($collection, array $resourcesList = [])
+    {
+        $this->loadResource($collection, $resourcesList, 'addCss');
+    }
+
+    public function loadJsResources($collection, array $resourcesList = [])
+    {
+        $this->loadResource($collection, $resourcesList, 'addJs');
     }
 }
