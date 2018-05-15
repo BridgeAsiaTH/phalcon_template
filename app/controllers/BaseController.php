@@ -7,7 +7,7 @@ class BaseController extends Controller
 {
     public function initialize()
     {
-        $this->tag->setTitle('FXBOT :: Save your time and money.');
+        $this->tag->setTitle('THIS IS HOME.');
     }
     public function hasErrors($result) : bool
     {
