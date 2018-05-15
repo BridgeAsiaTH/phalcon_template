@@ -48,4 +48,9 @@ class IndexController extends BaseController
         // Use logger to investigate an issue.
         // $this->di->get('logger')->debug(print_r($variable, true));
     }
+
+    public function route404Action()
+    {
+        return $this->responseMessage([PAGE_NOT_FOUND], NOT_FOUND);
+    }
 }
