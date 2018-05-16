@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.13.12
+    container_name: [project_name]_nginx
+    restart: always
+    expose:
+      - 80
+    volumes:
+      - ./staging-server.conf:/etc/nginx/conf.d/server.conf
+      - /opt/src/[project_name]/:/var/www/server
+    links:
+      - db
+      - php
+    environment:
+      - VIRTUAL_HOST=staging.[project_name].com
+
+  php:
+    image: kamolcu/phalcon-php71-fpm
+    container_name: [project_name]_php
+    restart: always
+    volumes:
+      - ./staging-php.ini:/usr/local/etc/php/php.ini
+      - /opt/src/[project_name]:/var/www/server
+    links:
+      - db
+      - redis
+    working_dir: /var/www/server
+    environment:
+      - ENV=staging
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST_PORT=${DB_HOST_PORT}
+      - HOST_IP_ADDRESS=${HOST_IP_ADDRESS}
+      - REDIS_HOST_PORT=${REDIS_HOST_PORT}
+      - REDIS_AUTH=${REDIS_AUTH}
+      - SECRET=${SECRET}
+      - ALGORITHM=${ALGORITHM}
+      - SMTP_EMAIL=${SMTP_EMAIL}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+
+  db:
+    image: mariadb:10.3.6
+    container_name: [project_name]_db
+    restart: always
+    volumes:
+      - ./staging-db_cfg_custom.cnf:/etc/mysql/conf.d/db_cfg_custom.cnf
+    ports:
+      - ${DB_HOST_PORT}:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=mainDb
+
+  redis:
+    image: redis:3.2.11
+    container_name: [project_name]_redis
+    restart: always
+    volumes:
+      - ./staging-redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - ${REDIS_HOST_PORT}:6379
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+
+networks:
+  default:
+    external:
+      name: docker_network
