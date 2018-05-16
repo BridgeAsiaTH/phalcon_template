@@ -15,6 +15,9 @@ services:
       - php
     environment:
       - VIRTUAL_HOST=staging.[project_name].com
+      - LETSENCRYPT_HOST=staging.[project_name].com
+      - LETSENCRYPT_EMAIL=admin@staging.[project_name].com
+      - VIRTUAL_NETWORK=docker_network
 
   php:
     image: kamolcu/phalcon-php71-fpm
