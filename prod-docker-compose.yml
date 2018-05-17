@@ -35,8 +35,6 @@ services:
       - REDIS_AUTH=${REDIS_AUTH}
       - SECRET=${SECRET}
       - ALGORITHM=${ALGORITHM}
-      - SMTP_EMAIL=${SMTP_EMAIL}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
 
 networks:
   default:

@@ -36,8 +36,6 @@ services:
       - REDIS_AUTH=${REDIS_AUTH}
       - SECRET=${SECRET}
       - ALGORITHM=${ALGORITHM}
-      - SMTP_EMAIL=${SMTP_EMAIL}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
 
   db:
     image: mariadb:10.3.6
