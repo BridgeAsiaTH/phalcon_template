@@ -1,6 +1,7 @@
 <?php
+use Phalcon\Mvc\Router;
 
-$router = $di->getRouter();
+$router = $di->getShared('router');
 $router->setUriSource(Router::URI_SOURCE_SERVER_REQUEST_URI);
 
 $router->add('/', 'index::index');
