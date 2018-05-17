@@ -65,6 +65,15 @@ class BaseController extends Controller
         return [ 'messages' => $this->extractValidationErrorMessage($messages), 'model' => $model];
     }
 
+    public function modelDelete($modelObject)
+    {
+        $messages = [];
+        if ($modelObject->delete() === false) {
+            $messages = $modelObject->getMessages();
+        }
+        return [ 'messages' => $this->extractValidationErrorMessage($messages), 'model' => $modelObject];
+    }
+
     public function extractHeader($key)
     {
         $headers = $this->request->getHeaders();

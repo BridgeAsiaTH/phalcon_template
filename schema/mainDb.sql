@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS `config` ;
+CREATE TABLE IF NOT EXISTS `config`(
+  `key` VARCHAR(100) NOT NULL,
+  `value` VARCHAR(1000) NULL,
+  `createdAt` TIMESTAMP NULL,
+  `updatedAt` TIMESTAMP NULL,
+  PRIMARY KEY(`key`))
+ENGINE = InnoDB;
