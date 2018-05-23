@@ -1,267 +1,115 @@
 <?php
 
-/*
-  +------------------------------------------------------------------------+
-  | Phosphorum                                                             |
-  +------------------------------------------------------------------------+
-  | Copyright (c) 2013-present Phalcon Team and contributors               |
-  +------------------------------------------------------------------------+
-  | This source file is subject to the New BSD License that is bundled     |
-  | with this package in the file  LICENSE.txt.                            |
-  |                                                                        |
-  | If you did not receive a copy of the license and are unable to         |
-  | obtain it through the world-wide-web, please send an email             |
-  | to license@phalconphp.com so we can send you a copy immediately.       |
-  +------------------------------------------------------------------------+
-*/
-
-use Phalcon\Di;
-
-if (!function_exists('base_path')) {
-    /**
-     * Get the base path.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function base_path($path = '')
-    {
-        return dirname(__DIR__) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
-    }
+function base_path($path = '')
+{
+    return dirname(__DIR__) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 }
 
-if (!function_exists('app_path')) {
-    /**
-     * Get the application path.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function app_path($path = '')
-    {
-        return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
-    }
+function app_path($path = '')
+{
+    return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 }
 
-if (!function_exists('cache_path')) {
-    /**
-     * Get the cache path.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function cache_path($path = '')
-    {
-        return app_path('cache') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+function env($key, $default = null)
+{
+    $value = getenv($key);
+    if ($value === false) {
+        return value($default);
     }
+    switch (strtolower($value)) {
+        case 'true':
+            return true;
+        case 'false':
+            return false;
+        case 'empty':
+            return '';
+        case 'null':
+            return null;
+    }
+    return $value;
 }
 
-if (!function_exists('config_path')) {
-    /**
-     * Get the configuration path.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function config_path($path = '')
-    {
-        return app_path('config') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
-    }
-}
-
-if (!function_exists('value')) {
-    /**
-     * Return the default value of the given value.
-     *
-     * @param  mixed $value
-     * @return mixed
-     */
-    function value($value)
-    {
-        return $value instanceof Closure ? $value() : $value;
-    }
-}
-
-if (!function_exists('env')) {
-    /**
-     * Gets the value of an environment variable.
-     *
-     * @param  string $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function env($key, $default = null)
-    {
-        $value = getenv($key);
-        if ($value === false) {
-            return value($default);
+function toArrayByField($records, $fieldName)
+{
+    $output = [];
+    foreach ($records as $row) {
+        if (isset($row->{$fieldName})) {
+            $output[] = $row->{$fieldName};
         }
-        switch (strtolower($value)) {
-            case 'true':
-                return true;
-            case 'false':
-                return false;
-            case 'empty':
-                return '';
-            case 'null':
-                return null;
-        }
-        return $value;
     }
+    return $output;
 }
 
-if (!function_exists('container')) {
-    /**
-     * Calls the default Dependency Injection container.
-     *
-     * @param  mixed
-     * @return mixed|\Phalcon\DiInterface
-     */
-    function container()
-    {
-        $default = Di::getDefault();
-        $args = func_get_args();
-
-        if (empty($args)) {
-            return $default;
-        }
-
-        if (!$default) {
-            trigger_error('Unable to resolve Dependency Injection container.', E_USER_ERROR);
-        }
-
-        return call_user_func_array([$default, 'getShared'], $args);
-    }
+function getMinifiedPath($file, $filteringFileType, $suffix)
+{
+    return str_replace('.'.$filteringFileType, $suffix, $file);
 }
 
-if (!function_exists('singleton')) {
-    /**
-     * Calls the default Dependency Injection container.
-     *
-     * @param  mixed
-     * @return mixed|\Phalcon\DiInterface
-     */
-    function singleton()
-    {
-        $container = container();
-        $args = func_get_args();
-
-        if (empty($args)) {
-            return $container;
-        }
-
-        return call_user_func_array([$container, 'get'], $args);
-    }
-}
-
-if (!function_exists('environment')) {
-    /**
-     * Get or check the current application environment.
-     *
-     * @param  mixed
-     * @return string|bool
-     */
-    function environment()
-    {
-        if (func_num_args() > 0) {
-            return call_user_func_array([container(), 'getEnvironment'], func_get_args());
-        }
-
-        return container()->getEnvironment();
-    }
-}
-
-if (!function_exists('toArrayByField')) {
-    function toArrayByField($records, $fieldName)
-    {
-        $output = [];
-        foreach ($records as $row) {
-            if (isset($row->{$fieldName})) {
-                $output[] = $row->{$fieldName};
+function getDirContents($dir, &$results = [], $filteringFileType = 'txt')
+{
+    $items = scandir($dir);
+    foreach ($items as $value) {
+        $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
+        if (!is_dir($path)) {
+            $fileExtension = pathinfo($path, PATHINFO_EXTENSION);
+            if ($fileExtension === $filteringFileType) {
+                $results[] = $path;
+            } else {
+                continue;
             }
+        } elseif ($value !== '.' && $value !== '..') {
+            // Recursively
+            getDirContents($path, $results, $filteringFileType);
         }
-        return $output;
     }
+    return $results;
 }
 
-if (!function_exists('getMinifiedPath')) {
-    function getMinifiedPath($file, $filteringFileType, $suffix)
-    {
-        return str_replace('.'.$filteringFileType, $suffix, $file);
-    }
-}
-
-if (!function_exists('getDirContents')) {
-    function getDirContents($dir, &$results = [], $filteringFileType = 'txt')
-    {
-        $items = scandir($dir);
-        foreach ($items as $value) {
-            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
-            if (!is_dir($path)) {
-                $fileExtension = pathinfo($path, PATHINFO_EXTENSION);
-                if ($fileExtension === $filteringFileType) {
-                    $results[] = $path;
-                } else {
-                    continue;
-                }
-            } elseif ($value !== '.' && $value !== '..') {
-                // Recursively
-                getDirContents($path, $results, $filteringFileType);
-            }
+function getResourceFilename($file, bool $cacheBuster = false)
+{
+    // If real file exists, then try to generate md5 versioning.
+    $version = '';
+    if ($cacheBuster) {
+        $fullPath = $file;
+        if (!file_exists($fullPath)) {
+            $fullPath = base_path('public').DIRECTORY_SEPARATOR.$file;
         }
-        return $results;
-    }
-}
-
-if (!function_exists('getResourceFilename')) {
-    function getResourceFilename($file, bool $cacheBuster = false)
-    {
-        // If real file exists, then try to generate md5 versioning.
-        $version = '';
-        if ($cacheBuster) {
-            $fullPath = $file;
-            if (!file_exists($fullPath)) {
-                $fullPath = base_path('public').DIRECTORY_SEPARATOR.$file;
-            }
-            if (file_exists($fullPath)) {
-                $version = '.'.getFileVersioning($fullPath);
-            }
+        if (file_exists($fullPath)) {
+            $version = '.'.getFileVersioning($fullPath);
         }
-        // Else version could be empty string
+    }
+    // Else version could be empty string
 
-        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
-        $fileExtensionWithPrependDot = '.'.$fileExtension;
-        if (env('ENV') === 'prod' || env('ENV') === 'staging') {
-            if ($fileExtension) {
-                $suffix = '.min.'.$fileExtension;
-                $hasMinifiedSuffixAlready = strpos(substr($file, -strlen($suffix)), $suffix) !== false;
-                $fullSuffix = $version.$suffix;
-                if (!$hasMinifiedSuffixAlready) {
-                    // style/bootstrap.css -->
-                    // style/bootstrap.min.css OR
-                    // style/bootstrap.[md5:10].min.css
-                    $file = substr_replace($file, $fullSuffix, -strlen($fileExtensionWithPrependDot), strlen($fullSuffix));
-                } else {
-                    // style/bootstrap.min.css -->
-                    // style/bootstrap.min.css OR
-                    // style/bootstrap.[md5:10].min.css
-                    $file = substr_replace($file, $fullSuffix, -strlen($suffix), strlen($fullSuffix));
-                }
-            }
-        } else {
-            // No minify
-            if ($version) {
-                $fullSuffix = $version.$fileExtensionWithPrependDot;
+    $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+    $fileExtensionWithPrependDot = '.'.$fileExtension;
+    if (env('ENV') === 'prod' || env('ENV') === 'staging') {
+        if ($fileExtension) {
+            $suffix = '.min.'.$fileExtension;
+            $hasMinifiedSuffixAlready = strpos(substr($file, -strlen($suffix)), $suffix) !== false;
+            $fullSuffix = $version.$suffix;
+            if (!$hasMinifiedSuffixAlready) {
+                // style/bootstrap.css -->
+                // style/bootstrap.min.css OR
+                // style/bootstrap.[md5:10].min.css
                 $file = substr_replace($file, $fullSuffix, -strlen($fileExtensionWithPrependDot), strlen($fullSuffix));
+            } else {
+                // style/bootstrap.min.css -->
+                // style/bootstrap.min.css OR
+                // style/bootstrap.[md5:10].min.css
+                $file = substr_replace($file, $fullSuffix, -strlen($suffix), strlen($fullSuffix));
             }
         }
-        return $file;
+    } else {
+        // No minify
+        if ($version) {
+            $fullSuffix = $version.$fileExtensionWithPrependDot;
+            $file = substr_replace($file, $fullSuffix, -strlen($fileExtensionWithPrependDot), strlen($fullSuffix));
+        }
     }
+    return $file;
 }
 
-if (!function_exists('getFileVersioning')) {
-    function getFileVersioning(string $file, int $versionLength = 10)
-    {
-        return substr(md5(file_get_contents($file)), 0, $versionLength) ;
-    }
+function getFileVersioning(string $file, int $versionLength = 10)
+{
+    return substr(md5(file_get_contents($file)), 0, $versionLength) ;
 }
