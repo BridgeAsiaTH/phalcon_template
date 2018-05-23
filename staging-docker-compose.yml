@@ -1,30 +1,13 @@
 version: '3'
 
 services:
-  nginx:
-    image: nginx:1.13.12
-    container_name: [project_name]_nginx
+  web:
+    image: kamolcu/phalcon-php71-fpm
+    container_name: [project_name]_web
     restart: always
-    expose:
-      - 80
     volumes:
       - ./staging-server.conf:/etc/nginx/conf.d/server.conf
-      - /opt/src/[project_name]/:/var/www/server
-    links:
-      - db
-      - php
-    environment:
-      - VIRTUAL_HOST=staging.[project_name].com
-      - LETSENCRYPT_HOST=staging.[project_name].com
-      - LETSENCRYPT_EMAIL=admin@staging.[project_name].com
-      - VIRTUAL_NETWORK=docker_network
-
-  php:
-    image: kamolcu/phalcon-php71-fpm
-    container_name: [project_name]_php
-    restart: always
-    volumes:
-      - ./staging-php.ini:/usr/local/etc/php/php.ini
+      - ./staging-php.ini:/etc/php/7.2/fpm/php.ini
       - /opt/src/[project_name]:/var/www/server
     links:
       - db
@@ -32,6 +15,10 @@ services:
     working_dir: /var/www/server
     environment:
       - ENV=staging
+      - VIRTUAL_HOST=staging.[project_name].com
+      - LETSENCRYPT_HOST=staging.[project_name].com
+      - LETSENCRYPT_EMAIL=admin@staging.[project_name].com
+      - VIRTUAL_NETWORK=docker_network
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST_PORT=${DB_HOST_PORT}
       - HOST_IP_ADDRESS=${HOST_IP_ADDRESS}
