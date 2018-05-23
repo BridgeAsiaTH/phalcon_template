@@ -26,8 +26,6 @@ COPY conf/php-fpm.conf ${FPM_DIR}
 COPY conf/php.ini ${FPM_DIR}
 COPY conf/php.ini ${CLI_DIR}
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.2/fpm/php-fpm.conf ; fi;
-
 # cphalcon, phalcon-devtools, composer
 ENV PHALCON_VERSION=3.3.2
 ENV PHALCON_DEVTOOLS_VERSION=3.2.13
