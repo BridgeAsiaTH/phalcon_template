@@ -35,6 +35,7 @@ class BaseController extends Controller
     public function modelUpdate($model, array $extra = [])
     {
         $messages = [];
+        $data = [];
         if ($this->request->getJsonRawBody()) {
             $data = get_object_vars($this->request->getJsonRawBody());
         }
