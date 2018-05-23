@@ -1,7 +1,11 @@
 {
   "autoload": {
     "classmap": ["app/controllers", "app/models", "app/library", "test"],
-    "files": ["bootstrap/helpers.php", "bootstrap/constants.php"]
+    "files": [
+      "bootstrap/boot.php",
+      "bootstrap/helpers.php",
+      "bootstrap/constants.php"
+    ]
   },
 
   "require-dev": {
@@ -13,6 +17,8 @@
     "phalcon/incubator": "^3",
     "nesbot/carbon": "^1",
     "firebase/php-jwt": "^5",
-    "justinrainbow/json-schema": "^5"
+    "justinrainbow/json-schema": "^5",
+    "phalcon-ext/mailer": "^2.1",
+    "vlucas/phpdotenv": "^2.4"
   }
 }
