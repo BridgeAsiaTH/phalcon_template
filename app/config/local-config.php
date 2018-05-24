@@ -11,7 +11,7 @@ return new \Phalcon\Config([
     ],
     'database' => [
         'adapter'     => 'Mysql',
-        'host'        => '[project_name]_db',
+        'host'        => 'db',
         'port'        => '3306',
         'username'    => 'root',
         'password'    => env('DB_PASSWORD'),

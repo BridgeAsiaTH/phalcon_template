@@ -11,18 +11,10 @@ services:
       - /opt/src/[project_name]:/var/www/server
     working_dir: /var/www/server
     environment:
-      - ENV=prod
       - VIRTUAL_HOST=[project_name].com
       - LETSENCRYPT_HOST=[project_name].com
       - LETSENCRYPT_EMAIL=admin@[project_name].com
       - VIRTUAL_NETWORK=docker_network
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST_PORT=${DB_HOST_PORT}
-      - HOST_IP_ADDRESS=${HOST_IP_ADDRESS}
-      - REDIS_HOST_PORT=${REDIS_HOST_PORT}
-      - REDIS_AUTH=${REDIS_AUTH}
-      - SECRET=${SECRET}
-      - ALGORITHM=${ALGORITHM}
 
 networks:
   default:

@@ -11,7 +11,7 @@ return new \Phalcon\Config([
     ],
     'database' => [
         'adapter'     => 'Mysql',
-        'host'        => '[project_name]_db',
+        'host'        => env('DB_HOST'),
         'port'        => '3306',
         'username'    => 'root',
         'password'    => env('DB_PASSWORD'),
@@ -20,7 +20,7 @@ return new \Phalcon\Config([
     ],
     'redisSession' => [
         'uniqueId' => '[project_name]',
-        'host' => 'redis',
+        'host' => env('REDIS_HOST'),
         'port' => 6379,
         'auth' => env('REDIS_AUTH'),
         'persistent' => false,
@@ -29,7 +29,7 @@ return new \Phalcon\Config([
         'index' => 6, // redis db no.
     ],
     'redisBackend' => [
-        'host' => 'redis',
+        'host' => env('REDIS_HOST'),
         'port' => 6379,
         'auth' => env('REDIS_AUTH'),
         'persistent' => false,

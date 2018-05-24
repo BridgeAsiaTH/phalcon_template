@@ -14,18 +14,10 @@ services:
       - redis
     working_dir: /var/www/server
     environment:
-      - ENV=staging
       - VIRTUAL_HOST=staging.[project_name].com
       - LETSENCRYPT_HOST=staging.[project_name].com
       - LETSENCRYPT_EMAIL=admin@staging.[project_name].com
       - VIRTUAL_NETWORK=docker_network
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST_PORT=${DB_HOST_PORT}
-      - HOST_IP_ADDRESS=${HOST_IP_ADDRESS}
-      - REDIS_HOST_PORT=${REDIS_HOST_PORT}
-      - REDIS_AUTH=${REDIS_AUTH}
-      - SECRET=${SECRET}
-      - ALGORITHM=${ALGORITHM}
 
   db:
     image: mariadb:10.3.6
