@@ -2,7 +2,7 @@ version: '3'
 
 services:
   web:
-    image: kamolcu/phalcon-php71-fpm
+    image: kamolcu/phalcon-php72-fpm-nginx
     container_name: [project_name]_web
     restart: always
     volumes:
