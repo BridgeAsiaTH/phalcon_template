@@ -8,6 +8,18 @@ class BaseController extends Controller
     public function initialize()
     {
         $this->tag->setTitle('THIS IS HOME.');
+        $this->setCommonVariables();
+    }
+
+    protected function setCommonVariables()
+    {
+        $routeName = $this->di->get('router')->getActionName();
+
+        $this->view->setVars([
+            'cache_life_time' => $this->di->get('config')->page_cache_secs,
+            'environment' => env('ENV'),
+            'route_name' => $routeName,
+        ]);
     }
 
     public function hasErrors($result) : bool

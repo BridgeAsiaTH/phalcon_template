@@ -5,16 +5,9 @@ class IndexController extends BaseController
     public function initialize()
     {
         parent::initialize();
+        $this->view->setMainView('index');
         // Overwrite default title
         // $this->tag->setTitle('TITLE');
-        $this->setCommonVariables();
-    }
-
-    private function setCommonVariables()
-    {
-        $this->view->setVars([
-            'cache_life_time' => $this->di->get('config')->page_cache_secs
-        ]);
     }
 
     public function indexAction()
