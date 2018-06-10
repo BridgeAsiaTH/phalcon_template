@@ -8,6 +8,7 @@ class IndexController extends BaseController
         $this->view->setMainView('index');
         // Overwrite default title
         // $this->tag->setTitle('TITLE');
+        $this->t = $this->getTranslation();
     }
 
     public function indexAction()
@@ -36,6 +37,9 @@ class IndexController extends BaseController
 
         $this->view->setVars([
             'cache_key' => $cacheKey,
+            'hi_with_name' => $this->t->_('hi-with-name', ['name' => 'test name.']),
+            'hi' => $this->t->_('hi'),
+            'bye' => $this->t->_('bye'),
         ]);
 
         // Use logger to investigate an issue.

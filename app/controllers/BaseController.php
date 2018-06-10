@@ -11,6 +11,32 @@ class BaseController extends Controller
         $this->setCommonVariables();
     }
 
+    protected function getTranslation()
+    {
+        // Read from 'accept-language' header
+        $language = $this->request->getBestLanguage();
+
+        $messages = [];
+
+        $translationFile = app_path() . '/messages/' . $language . '.php';
+
+        // Check if we have a translation file for that lang
+        if (file_exists($translationFile)) {
+            require $translationFile;
+        } else {
+            // Fallback to some default
+            require  app_path() . '/messages/en.php';
+        }
+
+        // Return a translation object $messages comes from the require
+        // statement above
+        return new Phalcon\Translate\Adapter\NativeArray(
+            [
+                'content' => $messages,
+            ]
+        );
+    }
+
     protected function setCommonVariables()
     {
         $routeName = $this->di->get('router')->getActionName();
