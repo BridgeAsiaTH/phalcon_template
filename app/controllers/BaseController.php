@@ -163,10 +163,7 @@ class BaseController extends Controller
     public function sendJson($data, $status = OK)
     {
         if ($this->request->isPost() == true && $this->request->isAjax()) {
-            $data['csrf'] = [
-            'key' => $this->security->getTokenKey(),
-            'value' => $this->security->getToken()
-          ];
+            $data['csrf'] = $this->security->getToken();
         }
         $this->view->disable();
         $this->response->setStatusCode($status);
