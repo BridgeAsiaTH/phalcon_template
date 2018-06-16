@@ -37,6 +37,17 @@ try {
      * Handle the request
      */
     $application = new \Phalcon\Mvc\Application($di);
+
+    // Register the installed modules
+    $application->registerModules(
+        [
+            BOOKING_MODULE => [
+                'className' => 'Booking\Module',
+                'path'      => app_path() . DIRECTORY_SEPARATOR . BOOKING_MODULE . DIRECTORY_SEPARATOR . 'Module.php',
+            ],
+        ]
+    );
+
     echo $application->handle()->getContent();
 } catch (\Exception $e) {
     $exceptionRef = time();

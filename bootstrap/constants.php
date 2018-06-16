@@ -66,3 +66,6 @@ define('CACHE_BUSTER', true);
 
 define('FILE_KEY', 'file');
 define('CACHE_BUSTER_KEY', 'cache_buster');
+
+// Booking
+define('BOOKING_MODULE', 'booking');
