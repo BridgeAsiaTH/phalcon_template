@@ -8,3 +8,4 @@ vendor/
 error.log
 *.min.css
 *.min.js
+*.mwb.bak
