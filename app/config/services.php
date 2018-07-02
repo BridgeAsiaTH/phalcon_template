@@ -24,6 +24,12 @@ $di->setShared('config', function () {
     return include app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $environment . '-config.php';
 });
 
+$di->setShared('router', function () {
+    // https://docs.phalconphp.com/uk/3.3/routing
+    // Create the router without default routes
+    return new Phalcon\Mvc\Router(false);
+});
+
 /**
  * The URL component is used to generate all kind of urls in the application
  */

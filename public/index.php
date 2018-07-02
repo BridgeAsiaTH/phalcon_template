@@ -14,14 +14,14 @@ try {
     $di = new FactoryDefault();
     $configPath = app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
     /**
-     * Handle routes
-     */
-    include  $configPath . 'router.php';
-
-    /**
      * Read services
      */
     include $configPath . 'services.php';
+
+    /**
+     * Handle routes
+     */
+    include  $configPath . 'router.php';
 
     /**
      * Get config service for use in inline setup below
