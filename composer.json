@@ -1,13 +1,17 @@
 {
   "autoload": {
-    "classmap": ["app/controllers", "app/models", "app/library", "test"],
+    "classmap": [
+      "app/controllers",
+      "app/models",
+      "app/library",
+      "test"
+    ],
     "files": [
       "bootstrap/boot.php",
       "bootstrap/helpers.php",
       "bootstrap/constants.php"
     ]
   },
-
   "require-dev": {
     "phpunit/phpunit": "^6",
     "mockery/mockery": "^1"
