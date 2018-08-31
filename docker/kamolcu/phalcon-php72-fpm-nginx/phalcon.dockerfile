@@ -27,8 +27,8 @@ COPY conf/php.ini ${FPM_DIR}
 COPY conf/php.ini ${CLI_DIR}
 
 # cphalcon, phalcon-devtools, composer
-ENV PHALCON_VERSION=3.3.2
-ENV PHALCON_DEVTOOLS_VERSION=3.2.13
+ENV PHALCON_VERSION=3.4.1
+ENV PHALCON_DEVTOOLS_VERSION=3.4.0
 
 WORKDIR /cphalcon
 RUN wget https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz --output-document=./phalcon.tar.gz
