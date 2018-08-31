@@ -4,6 +4,7 @@
 vendor/
 *phpinfo*
 /build/
+/log/
 .env
 error.log
 *.min.css
