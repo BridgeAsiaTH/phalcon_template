@@ -14,7 +14,7 @@ function env($key, $default = null)
 {
     $value = getenv($key);
     if ($value === false) {
-        return value($default);
+        return $default;
     }
     switch (strtolower($value)) {
         case 'true':
